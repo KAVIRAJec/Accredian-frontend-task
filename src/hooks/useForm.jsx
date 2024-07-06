@@ -9,7 +9,7 @@ const useForm = () => {
   const handleForm = async (values) => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:3005/api/refer/form', {
+      const res = await fetch('https://accredian-backend-task-cs8j.onrender.com/api/refer/form', {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',

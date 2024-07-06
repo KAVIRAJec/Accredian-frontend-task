@@ -12,7 +12,7 @@ const useLogin = () => {
     try {
       setError(null);
       setLoading(true);
-      const res = await fetch('http://localhost:3005/api/auth/login', {
+      const res = await fetch('https://accredian-backend-task-cs8j.onrender.com/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',

@@ -11,7 +11,7 @@ import useSignup from '../hooks/useSignup';
 import { GoogleLogin } from '@react-oauth/google'
 import { jwtDecode } from "jwt-decode";
 
-const initialValues = { name: "",email: "", password: "",confirmpassword: "" };
+const initialValues = { name: "", gender: "", contact: "", email: "", password: "", confirmpassword: "", referral_code: "" };
 
 const Register = () => {
 
@@ -33,117 +33,171 @@ const Register = () => {
 
   useEffect(() => {
     console.log(formErrors);
-    if(Object.keys(formErrors).length === 0 && isSubmit){
+    if (Object.keys(formErrors).length === 0 && isSubmit) {
       handleRegister(formValues);
     }
-  },[formErrors]);
+  }, [formErrors]);
 
   const validate = (values) => {
     const errors = {};
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
-    if(!values.name){
+    const contactRegex = /^\+?[1-9]\d{1,14}$/;
+  
+    if (!values.name) {
       errors.name = "Name is required";
     }
-    if(!values.email){
+    if (!values.email) {
       errors.email = "Email is required";
-    }else if(!regex.test(values.email)){
+    } else if (!regex.test(values.email)) {
       errors.email = "Email is invalid";
     }
-    if(!values.password){
+    if (!values.password) {
       errors.password = "Password is required";
     } else if (values.password.length < 4) {
       errors.password = "Password must be more than 4 characters";
     } else if (values.password.length > 10) {
       errors.password = "Password cannot exceed more than 10 characters";
     }
-    if(values.password !== values.confirmpassword){
+    if (values.password !== values.confirmpassword) {
       errors.confirmpassword = "Password does not match";
     }
+    
+    if (!values.gender) {
+      errors.gender = "Gender is required";
+    }
+    
+    if (!values.contact) {
+      errors.contact = "Contact is required";
+    } else if (!contactRegex.test(values.contact)) {
+      errors.contact = "Contact is invalid";
+    }
+  
     return errors;
   };
 
   const { loading, error, registerUser, errorMessage } = useSignup();
-  
+
   const handleRegister = async (values) => {
+    console.log(values);
     registerUser(values);
   };
 
   return (
-    <div className='flex justify-center items-center h-screen bg-gray-300'>
-    <Card className='w-full max-w-md'>
-    <CardHeader className="bg-white shadow-md rounded-md p-6">
-    <CardTitle className="text-xxl font-bold mb-2">Create an Account</CardTitle>
-    <CardDescription className="text-gray-700 font-medium text-base">
-              Join into our community!
-            </CardDescription>
-    </CardHeader>
-            
-            <CardContent className="mt-4">
-                <form onSubmit={handleSubmit}>
-                <div className='mb-4'>
-                  <Label className="block text-gray-700 font-bold mb-1 text-base px-2" >Full Name</Label>
-                  <Input
-                    type="text"
-                    name="name"
-                    placeholder="Enter your Full Name"
-                    value={formValues.name}
-                    onChange={handleChange} 
-                  />
-                  <p className='text-red-500 text-xs italic'>{formErrors.name}</p>
-                </div>
-                <div className='mb-2'>
-                    <Label className="block text-gray-700 font-bold mb-1 text-base px-2">Email</Label>
-                      <Input
-                        type="email"
-                        name="email"
-                        placeholder="Enter your email"
-                        value={formValues.email}
-                        onChange={handleChange} 
-                      />
-                      <p className='text-red-500 text-xs italic'>{formErrors.email}</p>
-                  </div>
-                  <div className='mb-2'>
-                    <Label className="block text-gray-700 font-bold mb-1 text-base px-2">Password</Label>
-                      <Input
-                        type="password"
-                        name="password"
-                        placeholder="Enter your Password"
-                        value={formValues.password}
-                        onChange={handleChange} 
-                      />
-                      <p className='text-red-500 text-xs italic'>{formErrors.password}</p>
-                  </div>
-                  <div className='mb-2'>
-                    <Label className="block text-gray-700 font-bold mb-1 text-base px-2">Password</Label>
-                      <Input
-                        type="password"
-                        name="confirmpassword"
-                        placeholder="Re-enter your Password"
-                        value={formValues.confirmpassword}
-                        onChange={handleChange} 
-                      />
-                      <p className='text-red-500 text-xs italic'>{formErrors.confirmpassword}</p>
-                  </div>
+    <div className='flex justify-center items-center pt-28 bg-gray-300'>
+      <Card className='w-full max-w-md'>
+        <CardHeader className="bg-white shadow-md rounded-md p-6">
+          <CardTitle className="text-xxl font-bold mb-2">Create an Account</CardTitle>
+          <CardDescription className="text-gray-700 font-medium text-base">
+            Join into our community!
+          </CardDescription>
+        </CardHeader>
 
-                <Button
-                  type={`${loading ? '' : 'primary'}`}
-                  className="w-full mt-2"
-                  onClick={() => {
-                                if (errorMessage && errorMessage.includes("User registered Successfully")) {
-                                    toast.success(errorMessage);
-                                } else if (errorMessage) {
-                                    toast.error(errorMessage);
-                                }
-                            }}
-                >
-                  <Toaster richColors position="top-center" expand={false}/>
-          
+        <CardContent className="mt-4">
+          <form onSubmit={handleSubmit}>
+            <div className='mb-4'>
+              <Label className="block text-gray-700 font-bold mb-1 text-base px-2" >Full Name</Label>
+              <Input
+                type="text"
+                name="name"
+                placeholder="Enter your Full Name"
+                value={formValues.name}
+                onChange={handleChange}
+              />
+              <p className='text-red-500 text-xs italic'>{formErrors.name}</p>
+            </div>
 
-                  {loading ? <ClassicSpinner /> : 'Create Account'}
-                </Button>
+            <div className='mb-4'>
+              <Label className="block text-gray-700 font-bold mb-1 text-base px-2" >Gender</Label>
+              <select
+                name="gender"
+                value={formValues.gender}
+                onChange={handleChange}
+                className="w-full block appearance-none bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+              >
+                <option value="" disabled>Select your gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+              </select>
+              <p className='text-red-500 text-xs italic'>{formErrors.name}</p>
+            </div>
 
-              <div className='flex justify-center mt-4'>
-              <GoogleLogin 
+            <div className='mb-4'>
+              <Label className="block text-gray-700 font-bold mb-1 text-base px-2">Contact</Label>
+              <Input
+                type="tel"
+                name="contact"
+                placeholder="Enter your contact number"
+                value={formValues.contact}
+                onChange={handleChange}
+                />
+              <p className='text-red-500 text-xs italic'>{formErrors.contact}</p>
+            </div>
+
+            <div className='mb-2'>
+              <Label className="block text-gray-700 font-bold mb-1 text-base px-2">Email</Label>
+              <Input
+                type="email"
+                name="email"
+                placeholder="Enter your email"
+                value={formValues.email}
+                onChange={handleChange}
+              />
+              <p className='text-red-500 text-xs italic'>{formErrors.email}</p>
+            </div>
+            <div className='mb-2'>
+              <Label className="block text-gray-700 font-bold mb-1 text-base px-2">Password</Label>
+              <Input
+                type="password"
+                name="password"
+                placeholder="Enter your Password"
+                value={formValues.password}
+                onChange={handleChange}
+              />
+              <p className='text-red-500 text-xs italic'>{formErrors.password}</p>
+            </div>
+            <div className='mb-2'>
+              <Label className="block text-gray-700 font-bold mb-1 text-base px-2">Password</Label>
+              <Input
+                type="password"
+                name="confirmpassword"
+                placeholder="Re-enter your Password"
+                value={formValues.confirmpassword}
+                onChange={handleChange}
+              />
+              <p className='text-red-500 text-xs italic'>{formErrors.confirmpassword}</p>
+            </div>
+
+            <div className='mb-4'>
+              <Label className="block text-gray-700 font-bold mb-1 text-base px-2">Referral Code (Optional)</Label>
+              <Input
+                type="text"
+                name="referralCode"
+                placeholder="Enter referral code (if any)"
+                value={formValues.referral_code}
+                onChange={handleChange}
+              />
+              <p className='text-red-500 text-xs italic'>{formErrors.referral_code}</p>
+            </div>
+
+            <Button
+              type={`${loading ? '' : 'primary'}`}
+              className="w-full mt-2"
+              onClick={() => {
+                if (errorMessage && errorMessage.includes("User registered Successfully")) {
+                  toast.success(errorMessage);
+                } else if (errorMessage) {
+                  toast.error(errorMessage);
+                }
+              }}
+            >
+              <Toaster richColors position="top-center" expand={false} />
+
+
+              {loading ? <ClassicSpinner /> : 'Create Account'}
+            </Button>
+
+            <div className='flex justify-center mt-4'>
+              <GoogleLogin
                 size='large'
                 shape='rectangular'
                 theme='outline'
@@ -153,25 +207,25 @@ const Register = () => {
                   const credentialResponseDecoded = jwtDecode(
                     credentialResponse.credential
                   )
-                console.log(credentialResponseDecoded);
-                handleRegister({ email: credentialResponseDecoded.email, name: credentialResponseDecoded.name, password: "default",passwordConfirm: "default" });
-              }}
+                  console.log(credentialResponseDecoded);
+                  handleRegister({ email: credentialResponseDecoded.email, gender: "male", contact: "123456789", name: credentialResponseDecoded.name, password: "default", passwordConfirm: "default", referral_code: "" });
+                }}
                 onError={() => {
-                console.log('Registration Failed');
-              }}
+                  console.log('Registration Failed');
+                }}
               />
-              </div>
-            </form>
+            </div>
+          </form>
 
-            <div className='text-center mt-5 mb-3'>
-              <Link to="/login">
-                <Button className="w-full">
-                  Sign in
-                </Button>
-              </Link>
-              </div>
+          <div className='text-center mt-5 mb-3'>
+            <Link to="/login">
+              <Button className="w-full">
+                Sign in
+              </Button>
+            </Link>
+          </div>
         </CardContent>
-    </Card>
+      </Card>
     </div>
   )
 }

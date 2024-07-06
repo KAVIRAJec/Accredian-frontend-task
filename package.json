@@ -39,6 +39,7 @@
     "react-router-dom": "^6.24.1",
     "react-scripts": "5.0.1",
     "react-spinners-kit": "^1.9.1",
+    "shadcn-ui": "^0.8.0",
     "sonner": "^1.5.0",
     "styled-components": "^6.1.11",
     "tailwind-merge": "^2.3.0",
@@ -49,7 +50,7 @@
   },
   "scripts": {
     "start": "craco start",
-    "build": "craco build",
+    "build": "npm i --legacy-peer-deps && craco build",
     "test": "craco test"
   },
   "eslintConfig": {
