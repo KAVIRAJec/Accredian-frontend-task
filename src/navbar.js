@@ -103,12 +103,10 @@ function NavBar() {
                         component="a"
                         href="#app-bar-with-responsive-menu"
                         sx={{
-                            mr: 2,
                             display: { xs: 'flex', md: 'none' },
                             flexGrow: 1,
                             fontFamily: 'sans-serif',
                             fontWeight: 700,
-                            letterSpacing: '.2rem',
                             color: '#297ce9',
                             textDecoration: 'none',
                         }}
@@ -137,7 +135,7 @@ function NavBar() {
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
-                        <Button variant="text" sx={{ mr: 2 }}>
+                        <Button variant="text">
                             <Typography textTransform={'none'} onClick={logout}>
                                 {userData ? 'logout' : 'login'}
                             </Typography>

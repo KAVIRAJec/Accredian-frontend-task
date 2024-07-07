@@ -16,7 +16,6 @@ function Home() {
                         className="mt-8 md:mt-14 rounded-2xl shadow-2xl"
                         src={'https://i.postimg.cc/nhxk54W0/page.png'}
                         alt='page ui'
-                        loading="lazy"
 
                     />
                 </div>
